@@ -2,8 +2,9 @@
 {
     public class AppSettings
     {
-        public string database_connection { get; set; }
-        public string crypto_digit32 { get; set; }
-        public string crypto_digit16 { get; set; }
+        public string DatabaseConnection { get; set; }
+        public string CRYPTO_DIGIT32 { get; set; }
+        public string CRYPTO_DIGIT16 { get; set; }
+        public string ApiUrl { get; set; }
     }
 }

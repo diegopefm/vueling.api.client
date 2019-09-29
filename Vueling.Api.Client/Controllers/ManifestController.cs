@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography.Xml;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -28,60 +26,52 @@ namespace Vueling.Api.Client.Controllers
             this.repository = repository;
         }
 
-        //[HttpGet("{flight}")]
         [HttpGet]
+        [AllowAnonymous]
+        [EnableCors("Cors")]
         [Route("update/{flight}")]
         public ActionResult Get(string flight)
         {
-            //var passengers = new List<Passenger>();
-            //var _passengers = repository.updatePassengers(passengers);
-            //return new JsonResult(passengers);
+            Response response = new Response { Status = ResponseStatus.KO, Message = "There was a problem contacting manifest Api." };
+            List<Passenger> passengers =  doRequest(flight);
+            if (passengers != null) response = processManifest(passengers);
 
-            Response response = new Response { Status = ResponseStatus.OK, Message = "OK" };
-            doRequest(flight);
             return new JsonResult(response);
         }
 
         [HttpPost]
-        [Route("add")]
+        [AllowAnonymous]
         [EnableCors("Cors")]
-        [Authorize]
-        public ActionResult Add(string flight)
+        [Route("search")]
+        public ActionResult Post(Passenger passenger) //string name = "", string surname = "", string seat = ""
         {
-            Response response = new Response { Status = ResponseStatus.OK, Message = "OK" };
-            doRequest(flight);
-            //Response response = repository.addPassenger(passenger);
-            return new JsonResult(response);
+            List<Passenger> passengers = repository.getPassengers(passenger.Name, passenger.Surname, passenger.Seat);
+            return new JsonResult(passengers);
         }
 
-        private void doRequest(string flight) {
+        private List<Passenger> doRequest(string flight) {
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:55909/api/manifest/get");
+            client.BaseAddress = new Uri(settings.Value.ApiUrl);
 
             // Add an Accept header for JSON format.
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
 
             // List data response.
+            List<Passenger> passengers = null;
             HttpResponseMessage response = client.GetAsync(flight).Result;
             if (response.IsSuccessStatusCode)
             {
-                var dataObjects = response.Content.ReadAsAsync<IEnumerable<Passenger>>().Result;  //Make sure to add a reference to System.Net.Http.Formatting.dll
-                foreach (var d in dataObjects)
-                {
-                    //Console.WriteLine("{0}", d.Name);
-                }
-            }
-            else
-            {
-                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                passengers = (List<Passenger>)response.Content.ReadAsAsync<IEnumerable<Passenger>>().Result;
             }
             client.Dispose();
+
+            return passengers;
         }
 
-        private ObjectResult userUnauthorized()
-        {
-            return StatusCode((int)HttpStatusCode.Unauthorized, "Invalid credentials!");
+        private Response processManifest(List<Passenger> passengers) {
+
+            return repository.updatePassengers(passengers);
         }
     }
 }

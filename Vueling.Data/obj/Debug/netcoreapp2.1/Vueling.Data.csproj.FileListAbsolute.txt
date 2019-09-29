@@ -8,3 +8,4 @@ C:\projects\Vueling\Vueling.Api.Client\Vueling.Data\bin\Debug\netcoreapp2.1\Vuel
 C:\projects\Vueling\Vueling.Api.Client\Vueling.Data\bin\Debug\netcoreapp2.1\Vueling.Data.pdb
 C:\projects\Vueling\Vueling.Api.Client\Vueling.Data\obj\Debug\netcoreapp2.1\Vueling.Data.dll
 C:\projects\Vueling\Vueling.Api.Client\Vueling.Data\obj\Debug\netcoreapp2.1\Vueling.Data.pdb
+C:\projects\Vueling\Vueling.Api.Client\Vueling.Data\obj\Debug\netcoreapp2.1\Vueling.Data.csprojAssemblyReference.cache

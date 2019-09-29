@@ -9,9 +9,6 @@ using Vueling.Data;
 using Vueling.Data.Models;
 using System.Linq;
 using Vueling.Api.Client.Helpers;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Vueling.Api.Client
 {
@@ -41,9 +38,11 @@ namespace Vueling.Api.Client
             // Add our Config object so it can be injected
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
+            //cors
+            var allowedHosts = Configuration.GetSection("AppSettings").GetChildren().Where(x => x.Key == "AllowedHosts").First().Value;
             services.AddCors(o => o.AddPolicy("Cors", builder =>
             {
-                builder.WithOrigins("http://localhost:4200")
+                builder.WithOrigins(allowedHosts)
                        .AllowAnyMethod()
                        .AllowCredentials()
                        .AllowAnyHeader();

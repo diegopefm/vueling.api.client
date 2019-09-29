@@ -19,7 +19,8 @@ namespace Vueling.Data.Models
         {
             modelBuilder.Entity<Passenger>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .HasColumnName("id").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Surname)
                     .IsRequired()

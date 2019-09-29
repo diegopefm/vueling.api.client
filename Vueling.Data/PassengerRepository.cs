@@ -36,7 +36,8 @@ namespace Vueling.Data
             try
             {
                 foreach (Passenger passenger in passengers) {
-                    context.Passengers.Add(passenger);
+                    bool idExists = context.Passengers.Where(x => x.Id == passenger.Id).FirstOrDefault() != null;
+                    if (!idExists) context.Passengers.Add(passenger);
                 }
                 context.SaveChanges();
             }
@@ -46,6 +47,16 @@ namespace Vueling.Data
                 message = "There was a problem updating manifest.";
             }
             return new Response { Status = result, Message = message };
+        }
+
+        public List<Passenger> getPassengers(string name, string surname, string seat) {
+
+            List<Passenger> passengers = new List<Passenger>();
+            if (name != string.Empty) passengers = context.Passengers.Where(x => x.Name == name).ToList();
+            if (surname != string.Empty) passengers = context.Passengers.Where(x => x.Surname == surname).ToList();
+            if (seat != string.Empty) passengers = context.Passengers.Where(x => x.Seat == seat).ToList();
+
+            return passengers;
         }
     }
 }
