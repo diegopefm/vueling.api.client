@@ -43,7 +43,7 @@ namespace Vueling.Api.Client.Controllers
         [AllowAnonymous]
         [EnableCors("Cors")]
         [Route("search")]
-        public ActionResult Post(Passenger passenger) //string name = "", string surname = "", string seat = ""
+        public ActionResult Post(Passenger passenger)
         {
             List<Passenger> passengers = repository.getPassengers(passenger.Name, passenger.Surname, passenger.Seat);
             return new JsonResult(passengers);

@@ -35,11 +35,16 @@ namespace Vueling.Data
             string message = "Manifest updated correctly.";
             try
             {
+                int newPassengers = 0;
                 foreach (Passenger passenger in passengers) {
                     bool idExists = context.Passengers.Where(x => x.Id == passenger.Id).FirstOrDefault() != null;
-                    if (!idExists) context.Passengers.Add(passenger);
+                    if (!idExists) {
+                        context.Passengers.Add(passenger);
+                        newPassengers++;
+                    }
                 }
                 context.SaveChanges();
+                message = message + " " + newPassengers + " new passenger(s) added";
             }
             catch (Exception)
             {
